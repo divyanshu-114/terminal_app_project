@@ -1,46 +1,26 @@
-# Notes CLI
+# Notes CLI (`divyanshu-notes`)
 
-A lightweight, fast command-line note-taking tool for macOS. Notes CLI lets you create, view, edit, search, and delete plain-text notes directly from your terminal — no GUI, no cloud sync, no dependencies. Each note is a Markdown file with YAML-style frontmatter stored locally in `~/Desktop/Notes/`, making them easy to browse, back up, or version-control manually.
+A lightweight, fast, terminal-first note-taking tool for macOS. **Notes CLI** lets you create, view, edit, search, and delete plain-text Markdown notes directly from your terminal — zero GUI overhead, zero cloud lock-in, zero complex dependencies. 
 
----
+Each note is saved as a Markdown file with YAML frontmatter locally in `~/Desktop/Notes/`, making your notes transparent, human-readable, and easily backable or version-controlled.
 
-## Requirements
-
-- **macOS** (tested on macOS Ventura and later)
-- **Bash** 3.2+ (included with every macOS installation)
-- No external dependencies — uses only standard BSD tools: `bash`, `date`, `mkdir`, `cat`, `grep`, `sed`, `find`, `rm`, `nano`
+[![npm version](https://img.shields.io/npm/v/divyanshu-notes.svg?color=blue)](https://www.npmjs.com/package/divyanshu-notes)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](https://apple.com)
 
 ---
 
-## Installation
+## 🚀 Quick Start (Installation)
 
-### Step 1 — Clone or download
+### Option 1: Install Globally via npm (Recommended)
 
-```bash
-git clone <repo-url>
-cd notes-cli
-```
-
-### Step 2 — Make the script executable
+Anyone on macOS with Node.js/npm installed can install `divyanshu-notes` with a single command:
 
 ```bash
-chmod +x notes.sh
+npm install -g divyanshu-notes
 ```
 
-### Step 3 (Optional) — Add to your PATH
-
-To run `notes` from anywhere without typing the full path, move or symlink the script onto your `$PATH`:
-
-```bash
-# Option A: Copy to /usr/local/bin
-cp notes.sh /usr/local/bin/notes
-chmod +x /usr/local/bin/notes
-
-# Option B: Symlink (stays in sync if you edit notes.sh)
-ln -s "$(pwd)/notes.sh" /usr/local/bin/notes
-```
-
-Verify it's available:
+Now `notes` is available everywhere in your terminal:
 
 ```bash
 notes list
@@ -48,22 +28,44 @@ notes list
 
 ---
 
-## Storage
+### Option 2: Run via `npx` (No installation needed)
 
-All notes are saved in: `~/Desktop/Notes/`
+Run any command instantly without installing anything permanently:
 
-Each note is a separate `.md` file with a 3-digit zero-padded sequential ID:
-
-```
-~/Desktop/Notes/
-├── 001.md
-├── 002.md
-└── 004.md
+```bash
+npx divyanshu-notes add "Quick Thought"
+npx divyanshu-notes all
 ```
 
-Note IDs are **never reused** or renumbered after deletion. If `002.md` is deleted, the next new note receives the next highest unused ID.
+---
 
-**Note file format:**
+### Option 3: Manual Clone & Installation
+
+If you prefer to run directly from source without npm:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/divyanshu-114/terminal_app_project.git
+cd terminal_app_project/notes-cli
+
+# 2. Make the script executable
+chmod +x notes.sh
+
+# 3. Symlink to /usr/local/bin for global access
+sudo ln -s "$(pwd)/notes.sh" /usr/local/bin/notes
+```
+
+---
+
+## 📂 Storage & Format
+
+All notes live locally in: **`~/Desktop/Notes/`**
+
+- If the directory doesn't exist, it is created automatically before any command runs.
+- Notes are saved as 3-digit zero-padded Markdown files: `001.md`, `002.md`, `003.md`, etc.
+- **Sequential IDs are never reused or renumbered after deletion.** If `002.md` is deleted, the next created note receives the next highest unused ID (e.g., `004.md`).
+
+### Note File Structure (YAML Frontmatter + Body)
 
 ```markdown
 ---
@@ -78,244 +80,256 @@ modify the behavior of another function.
 
 ---
 
-## Command Reference
+## 📖 Command Reference
 
-### `notes list`
-Show the help screen listing all available commands.
+### 1. `notes list` (or `notes help` / bare `notes`)
+Displays the formatted help screen showing all available commands.
 
 ```bash
 notes list
 ```
 
-### `notes help`
-Identical to `notes list`.
+**Output:**
+```text
+╔══════════════════════════════════════════╗
+║              NOTES CLI                   ║
+╚══════════════════════════════════════════╝
 
-```bash
+Available Commands:
+
+notes list
+    Show all available commands
+
+notes add <title>
+    Create a new note
+
+notes view <id>
+    View a note
+
+notes edit <id>
+    Edit an existing note
+
+notes delete <id>
+    Delete a note
+
+notes search <keyword>
+    Search notes
+
+notes all
+    Show all saved notes
+
 notes help
+    Show help information
+
+notes exit
+    Exit the application
 ```
 
-### `notes add "<title>"`
-Create a new note. After running the command, type your note content and press **Ctrl+D** when finished.
+---
+
+### 2. `notes add "<title>"`
+Create a new note. Requires a non-empty title. Type your note content on stdin and press **Ctrl+D** when finished.
 
 ```bash
-notes add "Python Interview Tips"
+notes add "Python Decorators"
 ```
 
-- The title argument is required and must be non-empty.
-- The body content must be non-empty; pressing Ctrl+D immediately will abort without creating a file.
-
-**Example output:**
-```
+**Output:**
+```text
 Creating new note...
 
-Title: Python Interview Tips
+Title: Python Decorators
 
 Enter your note.
 Press Ctrl+D when finished.
 
-[you type your content here, then press Ctrl+D]
+[Type your note content here and press Ctrl+D]
 
 ✓ Note created successfully.
 
-ID: 005
-Location: ~/Desktop/Notes/005.md
+ID: 001
+Location: ~/Desktop/Notes/001.md
 ```
 
-### `notes view <id>`
-Display a single note. The ID can be given with or without leading zeros (`notes view 4` and `notes view 004` are equivalent).
+- **Empty titles or empty body contents are rejected** — no empty file will be created.
+
+---
+
+### 3. `notes view <id>`
+Displays the formatted content of a note. Accepts IDs with or without leading zeros (`notes view 1` and `notes view 001` both work).
 
 ```bash
-notes view 4
-notes view 004
+notes view 1
+notes view 001
 ```
 
-**Example output:**
-```
+**Output:**
+```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ID: 004
-Title: Python Interview Tips
+ID: 001
+Title: Python Decorators
 Created: 20 Sep 2026
 
-Python decorators are functions that
-modify the behavior of another function.
+Python decorators are functions that modify the behavior of another function.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-### `notes all`
-Show a formatted table of all saved notes, sorted by ID.
+---
+
+### 4. `notes all`
+Displays a neatly formatted, border-aligned table listing all saved notes sorted numerically by ID.
 
 ```bash
 notes all
 ```
 
-**Example output:**
-```
+**Output:**
+```text
 ┌─────┬─────────────────────────┬──────────────┐
 │ ID  │ Title                   │ Created      │
 ├─────┼─────────────────────────┼──────────────┤
-│ 001 │ DBMS Normalization      │ 20 Sep 2026  │
-│ 002 │ Python Interview        │ 20 Sep 2026  │
+│ 001 │ Python Decorators       │ 20 Sep 2026  │
+│ 002 │ DBMS Normalization      │ 20 Sep 2026  │
 └─────┴─────────────────────────┴──────────────┘
 ```
 
-If no notes exist:
-```
-No notes found.
+- Long titles are automatically truncated so table borders remain clean.
+- If no notes exist, a friendly empty-state prompt is shown.
 
-Create your first note using:
+---
 
-    notes add "My First Note"
-```
-
-### `notes edit <id>`
-Open a note in your preferred terminal editor. The editor is determined by the `$EDITOR` environment variable; if not set, defaults to **nano**.
+### 5. `notes edit <id>`
+Opens the note file directly in your preferred text editor. Respects the `$EDITOR` environment variable (defaults to `nano`).
 
 ```bash
-notes edit 3
-EDITOR=vim notes edit 3
+notes edit 1
+EDITOR=vim notes edit 1
 ```
 
-### `notes delete <id>`
-Delete a note after asking for confirmation.
+---
+
+### 6. `notes delete <id>`
+Prompts for confirmation before permanently deleting a note.
 
 ```bash
-notes delete 3
+notes delete 1
 ```
 
-**Example interaction:**
-```
+**Output:**
+```text
 Are you sure you want to delete:
 
-Git Basics
+Python Decorators
 
-[Y/n] Y
+[Y/n] y
 ✓ Note deleted successfully.
 ```
 
-- Press Enter (or type `Y`/`y`) to confirm.
-- Type anything else to cancel without deleting.
+- Accepts `Y`, `y`, or hitting Enter to confirm deletion.
+- Any other input cancels the operation without deleting the file.
 
-### `notes search <keyword>`
-Case-insensitive search across both the title and full body content of every note.
+---
+
+### 7. `notes search <keyword>`
+Performs a case-insensitive substring search across both titles and body text of all notes.
 
 ```bash
-notes search python
-notes search "version control"
+notes search decorators
 ```
 
-**Example output:**
+**Output:**
+```text
+Search results for: decorators
+
+[001] Python Decorators
+
+1 note found.
 ```
-Search results for: python
 
-[002] Python Interview
-[007] Python Functions
+---
 
-2 notes found.
-```
-
-### `notes exit`
-Print a goodbye message and exit. (See [Known Limitations](#known-limitations) for why this command exists.)
+### 8. `notes exit`
+Gracefully prints a goodbye message indicating where your notes are stored and exits clean.
 
 ```bash
 notes exit
 ```
 
-### Unknown commands
-
-Any unrecognized command prints a helpful error:
-
-```
-❌ Unknown command: foo
-
-Run:
-
-    notes list
-
-to see all available commands.
+**Output:**
+```text
+Goodbye! Your notes are safe in /Users/divyanshuraj/Desktop/Notes
 ```
 
 ---
 
-## Example Complete Workflow
+## ⚡ Complete Workflow Example
 
 ```bash
-# Create a couple of notes
+# 1. Create a couple of notes
 notes add "DBMS Normalization"
-# [type: Database normalization organizes data to reduce redundancy.]
-# [Ctrl+D]
+# [Type: Database normalization organizes fields and tables to reduce redundancy.]
+# [Press Ctrl+D]
 
-notes add "Python Interview"
-# [type: Python decorators modify the behavior of another function.]
-# [Ctrl+D]
+notes add "Python Tips"
+# [Type: Use list comprehensions for concise array building.]
+# [Press Ctrl+D]
 
-# See the help screen
-notes list
-
-# View all notes as a table
+# 2. View all notes table
 notes all
 
-# View a specific note
+# 3. View note 001
 notes view 1
 
-# Search across notes
-notes search python
+# 4. Search notes for a term
+notes search "redundancy"
 
-# Edit a note in your preferred editor
+# 5. Edit a note
 notes edit 2
 
-# Delete a note
+# 6. Delete a note
 notes delete 1
-
-# Exit gracefully
-notes exit
 ```
 
 ---
 
-## Running Tests
+## 🧪 Automated Testing
 
-The test suite uses a temporary directory and never touches your real `~/Desktop/Notes/`.
+The repository comes with a comprehensive Bash automated test suite (99 assertions across 17 test suites) that uses a temporary mock directory so your real notes are never touched.
+
+Run tests using npm:
+
+```bash
+npm test
+```
+
+Or execute directly:
 
 ```bash
 bash test/test.sh
 ```
 
-You should see output like:
+---
 
-```
-  ✓ PASS  Notes dir was auto-created
-  ✓ PASS  notes list shows NOTES CLI header
-  ...
-  ✓ ALL TESTS PASSED
-```
+## ⚠️ Known Limitations
+
+1. **Not an interactive REPL:** Each command runs as an independent shell invocation.
+2. **Frontmatter Edits:** Running `notes edit <id>` opens the raw Markdown file. Users should avoid altering the YAML frontmatter headers manually.
+3. **Concurrency:** Notes CLI is designed for single-user interactive desktop use; simultaneous background writes from multiple scripts could compute identical IDs.
 
 ---
 
-## Known Limitations
+## 🔮 Planned Future Features
 
-1. **Not a REPL.** Notes CLI is not an interactive shell session. Every command is a separate shell invocation (e.g. `notes add "..."`, `notes view 3`). The `notes exit` command exists as a graceful signal but simply prints a goodbye message and exits the current invocation — it does not terminate a running session because there is no persistent session to terminate.
-
-2. **`edit` does not protect frontmatter fields.** When you run `notes edit <id>`, the raw file is opened in your editor. If you accidentally modify the `id:` or `created:` fields inside the frontmatter, Notes CLI will read those modified values on subsequent `view` or `all` commands. Always leave the frontmatter intact. This is a known v1 limitation.
-
-3. **No concurrency protection.** If two terminal windows run `notes add` simultaneously, there is a small window where both could compute the same next ID and create a collision. For personal single-user use this is extremely unlikely to matter, but be aware if scripting bulk imports.
+- **Tags & Categories** — `#tag` support and category filtering
+- **Colors** — ANSI colorized terminal themes for `all` and `view`
+- **Archive** — Soft-delete archive folder before permanent removal
+- **Favorites** — Pin important notes to top of `notes all`
+- **Export / Import** — Backup notes into a `.zip` archive or sync to Git
 
 ---
 
-## Planned Future Features
+## 📄 License
 
-The following features are **not implemented** in v1 but are planned for future releases:
-
-- **Tags & categories** — Organize notes with searchable `#tags` or category fields in frontmatter
-- **Colors** — Color-coded output by category or tag
-- **Archive** — Move notes to an archive folder without permanently deleting them
-- **Favorites** — Mark notes as favorites and filter by favorites in `notes all`
-- **Custom sorting** — Sort `notes all` by title, date created, or last modified
-- **Fuzzy search** — Approximate matching so typos still find the right note
-- **Export / Import** — Export notes to a `.zip` or import from another Notes CLI installation
-- **Statistics** — `notes stats` command showing total notes, words, categories
-- **Auto-backup** — Automatic periodic backup of the notes directory
-- **Undo delete** — Trash-based delete with a recovery window before permanent removal
-- **Encryption** — Optional password-protected notes using `openssl`
-- **Git sync** — Automatic `git commit` + `git push` after each write operation for cloud backup
+MIT License © [divyanshu-114](https://github.com/divyanshu-114)
