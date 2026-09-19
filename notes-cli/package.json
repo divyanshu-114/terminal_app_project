@@ -1,0 +1,37 @@
+{
+  "name": "divyanshu-notes",
+  "version": "1.0.0",
+  "description": "A lightweight command-line note-taking tool for macOS — create, view, edit, search and delete plain-text notes from your terminal.",
+  "keywords": [
+    "notes",
+    "cli",
+    "terminal",
+    "bash",
+    "macos",
+    "note-taking"
+  ],
+  "author": "divyanshu-114",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divyanshu-114/terminal_app_project.git"
+  },
+  "homepage": "https://github.com/divyanshu-114/terminal_app_project/tree/main/notes-cli#readme",
+  "bin": {
+    "notes": "bin/notes"
+  },
+  "files": [
+    "bin/",
+    "notes.sh",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "os": [
+    "darwin"
+  ],
+  "scripts": {
+    "test": "bash test/test.sh"
+  }
+}

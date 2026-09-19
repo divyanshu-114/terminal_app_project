@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# bin/notes — thin wrapper that locates and runs notes.sh
+# This file is the npm package entry point.
+
+# Resolve the real path to this script, following symlinks (works on macOS)
+SOURCE="${BASH_SOURCE[0]}"
+while [[ -L "$SOURCE" ]]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+
+# notes.sh lives one level up from bin/
+NOTES_SH="$SCRIPT_DIR/../notes.sh"
+
+if [[ ! -f "$NOTES_SH" ]]; then
+    printf '❌ Error: notes.sh not found at %s\n' "$NOTES_SH" >&2
+    exit 1
+fi
+
+exec bash "$NOTES_SH" "$@"
